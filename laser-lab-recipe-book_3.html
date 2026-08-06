@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laser Lab Recipe Book</title>
+<style>
+:root{
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  --paper:#100C0D;
+  --card:#181214;
+  --card2:#20181A;
+  --ink:#FFF7F2;
+  --ink2:#C6B4AE;
+  --ink3:#8E7C77;
+  --rule:rgba(255,201,138,.24);
+  --rule2:rgba(255,201,138,.13);
+  --neon:#FF2036;
+  --neon-soft:#FF5C6B;
+  --cob:#FFC98A;
+  --cob-hot:#FFE7C4;
+  --red:#FF2036;
+  --blue:#FFB25C;
+  --green:#5CE08A;
+  --accent:var(--neon);
+  --glow:0 0 12px rgba(255,32,54,.55), 0 0 34px rgba(255,32,54,.22);
+  --cobglow:0 0 12px rgba(255,180,90,.55), 0 0 38px rgba(255,150,60,.28);
+}
+body[data-mode="engrave"]{ --accent:var(--cob-hot); --glow:var(--cobglow); }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:
+    radial-gradient(130% 55% at 50% -12%, rgba(255,180,100,.17), transparent 62%),
+    radial-gradient(90% 45% at 50% 112%, rgba(255,32,54,.12), transparent 72%),
+    var(--paper);
+  background-attachment:fixed;
+  color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:900px;margin:0 auto;padding:22px 18px 70px}
+
+/* ---- COB strip: the lab's own lighting, used as structure ---- */
+.cob{height:3px;border-radius:3px;background:linear-gradient(90deg,rgba(255,201,138,0),var(--cob-hot) 14%,var(--cob) 50%,var(--cob-hot) 86%,rgba(255,201,138,0));box-shadow:var(--cobglow)}
+
+/* masthead */
+header{text-align:center;padding-bottom:18px;position:relative}
+header::after{content:"";position:absolute;left:6%;right:6%;bottom:0;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,rgba(255,201,138,0),var(--cob) 30%,var(--cob-hot) 50%,var(--cob) 70%,rgba(255,201,138,0));
+  box-shadow:var(--cobglow)}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--cob);text-shadow:0 0 10px rgba(255,180,90,.5)}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(31px,7.4vw,54px);margin:.14em 0 .12em;line-height:1;color:#fff;text-shadow:0 0 18px rgba(255,255,255,.28)}
+h1 em{font-style:italic;color:var(--neon);text-shadow:0 0 10px rgba(255,32,54,.8),0 0 34px rgba(255,32,54,.45),0 0 70px rgba(255,32,54,.25);animation:hum 5.5s ease-in-out infinite}
+@keyframes hum{0%,100%{opacity:1}52%{opacity:.9}}
+.tagline{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink2)}
+
+/* nav */
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:4px;margin:18px 0 22px}
+nav button{appearance:none;background:none;border:0;cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);padding:9px 14px;border-bottom:2px solid transparent}
+nav button:hover{color:var(--ink)}
+nav button[aria-selected="true"]{color:#fff;font-weight:700;border-bottom-color:var(--neon);text-shadow:0 0 12px rgba(255,32,54,.6)}
+nav button:focus-visible{outline:2px solid var(--neon);outline-offset:-2px}
+
+/* cards, each lit along the top edge */
+.card{position:relative;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid rgba(255,255,255,.07);border-radius:4px;padding:24px 22px 22px;margin-bottom:20px;box-shadow:0 24px 50px -34px #000, inset 0 1px 0 rgba(255,255,255,.04)}
+.card::before{content:"";position:absolute;top:0;left:14px;right:14px;height:2px;border-radius:0 0 3px 3px;
+  background:linear-gradient(90deg,rgba(255,201,138,0),var(--cob) 18%,var(--cob-hot) 50%,var(--cob) 82%,rgba(255,201,138,0));
+  box-shadow:0 0 10px rgba(255,180,90,.5),0 0 26px rgba(255,150,60,.24)}
+h2.sec{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--cob);margin:0 0 14px;font-weight:700}
+h3.recipe{font-family:var(--serif);font-size:clamp(23px,4.8vw,31px);margin:0;font-weight:600;line-height:1.15;color:#fff}
+.yield{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--ink3);margin:7px 0 0;text-transform:uppercase}
+
+/* pickers */
+.picks{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (min-width:660px){.picks{grid-template-columns:2fr 1fr 1fr}}
+label.f{display:block}
+label.f>span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px}
+select,input,textarea{width:100%;font-family:var(--sans);font-size:15px;color:var(--ink);background:#0C0809;border:1px solid var(--rule);border-radius:3px;padding:9px}
+input[type=number]{font-family:var(--mono)}
+select:focus,input:focus,textarea:focus{outline:0;border-color:var(--neon);box-shadow:0 0 0 2px rgba(255,32,54,.28),var(--glow)}
+option{background:#181214;color:var(--ink)}
+.seg{display:flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden;background:#0C0809}
+.seg button{flex:1;appearance:none;background:none;border:0;border-right:1px solid var(--rule2);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:10px 3px;cursor:pointer;color:var(--ink3)}
+.seg button:last-child{border-right:0}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--neon);color:#fff;font-weight:700;box-shadow:inset 0 0 18px rgba(255,255,255,.22),0 0 14px rgba(255,32,54,.5)}
+.seg button:focus-visible{outline:2px solid var(--cob);outline-offset:-2px}
+.unitseg{width:158px;margin:14px auto 0}
+details{margin-top:14px;border-top:1px solid var(--rule2);padding-top:12px}
+summary{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);cursor:pointer}
+summary:hover{color:var(--cob)}
+details .picks{margin-top:12px}
+
+/* the settings band — lit like a control panel */
+.band{display:grid;grid-template-columns:repeat(3,1fr);margin:20px 0;background:#0C0809;border:1px solid var(--rule2);border-radius:4px;overflow:hidden;box-shadow:inset 0 0 40px rgba(255,32,54,.06)}
+.band div{padding:16px 6px;text-align:center;border-right:1px solid var(--rule2)}
+.band div:last-child{border-right:0}
+.band .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+.band .v{font-family:var(--serif);font-size:clamp(21px,5.2vw,36px);line-height:1.05;margin-top:4px;color:var(--accent);letter-spacing:-.02em;overflow-wrap:anywhere;text-shadow:var(--glow)}
+.band .v small{font-family:var(--mono);font-size:10.5px;color:var(--ink3);display:block;letter-spacing:.05em;margin-top:5px;text-shadow:none;text-transform:uppercase}
+
+/* leaders */
+.leader{display:flex;align-items:baseline;gap:8px;padding:5px 0}
+.leader .lbl{font-size:14.5px;color:var(--ink2)}
+.leader .dots{flex:1;border-bottom:1px dotted var(--rule);transform:translateY(-3px)}
+.leader .val{font-family:var(--mono);font-size:13.5px;font-weight:700;color:#fff;white-space:nowrap}
+
+/* method + notes */
+ol.method{margin:0;padding-left:1.4em}
+ol.method li{padding:6px 0;font-size:15px}
+ol.method li::marker{font-family:var(--mono);font-size:12px;color:var(--neon)}
+ul.notes{list-style:none;margin:0;padding:0}
+ul.notes li{padding:7px 0 7px 20px;position:relative;font-size:14.5px;color:var(--ink2);border-bottom:1px solid var(--rule2)}
+ul.notes li:last-child{border-bottom:0}
+ul.notes li::before{content:"";position:absolute;left:4px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--cob);box-shadow:0 0 8px rgba(255,180,90,.8)}
+.caution{border-left:3px solid var(--neon);background:rgba(255,32,54,.09);padding:12px 14px;font-size:14.5px;margin-top:12px;box-shadow:inset 0 0 26px rgba(255,32,54,.07)}
+.good{border-left:3px solid var(--green);background:rgba(92,224,138,.09);padding:12px 14px;font-size:14.5px}
+
+/* buttons */
+.btns{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+button.act,label.act{appearance:none;display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;background:var(--neon);color:#fff;border:0;border-radius:3px;padding:11px 15px;cursor:pointer;box-shadow:0 0 16px rgba(255,32,54,.45)}
+button.act.ghost,label.act.ghost{background:none;color:var(--ink);border:1px solid var(--rule);box-shadow:none}
+button.act.ghost:hover,label.act.ghost:hover{border-color:var(--cob);color:var(--cob-hot);box-shadow:0 0 14px rgba(255,180,90,.25)}
+button.act:hover{filter:brightness(1.1)}
+button.act:focus-visible,label.act:focus-visible{outline:2px solid var(--cob);outline-offset:2px}
+button.mini{padding:5px 10px;font-size:9.5px}
+
+/* stamps */
+.stamp{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--green);border:2px solid var(--green);border-radius:3px;padding:3px 9px;transform:rotate(-3deg);box-shadow:0 0 14px rgba(92,224,138,.3);text-shadow:0 0 10px rgba(92,224,138,.5)}
+.stamp.est{color:var(--cob);border-color:var(--cob);box-shadow:0 0 14px rgba(255,180,90,.28);text-shadow:0 0 10px rgba(255,180,90,.5)}
+.stamp.no{color:var(--neon);border-color:var(--neon);box-shadow:var(--glow);text-shadow:0 0 10px rgba(255,32,54,.7)}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:8px;border-bottom:1px solid var(--rule2)}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--cob)}
+td.n{font-family:var(--mono)}
+tr:hover td{background:rgba(255,201,138,.04)}
+.sw{display:inline-block;width:12px;height:12px;border:1px solid rgba(255,255,255,.5);vertical-align:-2px;margin-right:6px}
+.hidden{display:none!important}
+.hint{font-size:13.5px;color:var(--ink3);margin:0 0 14px}
+.rec{display:grid;grid-template-columns:88px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--rule2)}
+.rec:last-child{border-bottom:0}
+.thumb{width:88px;height:88px;background:#0C0809;border:1px solid var(--rule2);border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--ink3);overflow:hidden}
+.foot{text-align:center;font-family:var(--serif);font-style:italic;color:var(--ink3);font-size:14px;margin-top:28px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body data-mode="cut">
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">The Q Makerspace · Laser Lab</div>
+  <h1>Laser Lab <em>Recipe Book</em></h1>
+  <p class="tagline">Creality Falcon2 Pro 40 W — settings that work, written down where the next maker will find them.</p>
+  <div class="seg unitseg" id="segUnit">
+    <button data-v="mmmin" aria-pressed="true">mm/min</button>
+    <button data-v="mms" aria-pressed="false">mm/s</button>
+  </div>
+</header>
+
+<nav role="tablist">
+  <button role="tab" aria-selected="true" data-tab="cook">The recipe</button>
+  <button role="tab" aria-selected="false" data-tab="book">My recipes</button>
+  <button role="tab" aria-selected="false" data-tab="test">Test bake</button>
+  <button role="tab" aria-selected="false" data-tab="pantry">Pantry</button>
+</nav>
+
+<div class="cob" style="margin:0 0 22px"></div>
+
+<!-- ================= THE RECIPE ================= -->
+<section id="tab-cook">
+  <div class="card">
+    <h2 class="sec">Ingredients</h2>
+    <div class="picks">
+      <label class="f"><span>Material</span><select id="mat"></select></label>
+      <label class="f" id="wrapT"><span>Thickness mm</span><input type="number" id="thick" value="3" min="0.05" max="60" step="0.5"></label>
+    </div>
+    <label class="f" style="margin-top:12px"><span>Beam</span>
+      <div class="seg" id="segPreset">
+        <button data-v="f2p40" aria-pressed="true">40 W normal</button>
+        <button data-v="f2p20" aria-pressed="false">20 W precise</button>
+        <button data-v="f16" aria-pressed="false">1.6 W module</button>
+      </div>
+    </label>
+    <div class="picks" style="margin-top:12px">
+      <label class="f"><span>Doing what</span>
+        <div class="seg" id="segMode">
+          <button data-v="cut" aria-pressed="true">Cut through</button>
+          <button data-v="engrave" aria-pressed="false">Engrave</button>
+        </div>
+      </label>
+      <label class="f" id="wrapQual"><span>Aim for</span>
+        <div class="seg" id="segQual">
+          <button data-v="fast" aria-pressed="false">Quick</button>
+          <button data-v="balanced" aria-pressed="true">Standard</button>
+          <button data-v="clean" aria-pressed="false">Best edge</button>
+        </div>
+      </label>
+      <label class="f hidden" id="wrapTier"><span>How deep</span>
+        <div class="seg" id="segTier">
+          <button data-v="light" aria-pressed="false">Light</button>
+          <button data-v="std" aria-pressed="true">Standard</button>
+          <button data-v="deep" aria-pressed="false">Deep</button>
+        </div>
+      </label>
+    </div>
+    <details id="advBox">
+      <summary>If this beam is running weaker than it should</summary>
+      <div class="picks">
+        <label class="f"><span>Actual watts</span><input type="number" id="mWatts" min="0.5" step="0.5"></label>
+        <label class="f"><span>Top speed <em class="uu">mm/min</em></span><input type="number" id="mVmax" min="1" step="10"></label>
+      </div>
+      <p class="hint" style="margin:10px 0 0">Diode modules don't age the way a CO₂ tube does, but a dusty lens or a loose focus still costs real power. Drop the watts here if a test bake says so — it only affects this beam's numbers, not the others.</p>
+      <p class="hint" id="mNote" style="margin:6px 0 0"></p>
+    </details>
+  </div>
+
+  <div class="card" id="recipeCard"></div>
+</section>
+
+<!-- ================= MY RECIPES ================= -->
+<section id="tab-book" class="hidden">
+  <div class="card">
+    <h2 class="sec">Write down what worked</h2>
+    <p class="hint">A recipe you proved on the machine beats any estimate. Saved recipes show up on the recipe page and quietly correct the numbers for every other thickness of that material.</p>
+    <div class="picks">
+      <label class="f" style="grid-column:1/-1"><span>Name it</span><input type="text" id="rName" placeholder="3 mm ply — badge blanks"></label>
+    </div>
+    <div class="picks" style="margin-top:12px">
+      <label class="f"><span>Material</span><select id="rMat"></select></label>
+      <label class="f"><span>Thickness mm</span><input type="number" id="rT" value="3" step="0.5" min="0.05"></label>
+      <label class="f"><span>Cut or engrave</span>
+        <div class="seg" id="segRMode">
+          <button data-v="cut" aria-pressed="true">Cut</button>
+          <button data-v="engrave" aria-pressed="false">Engrave</button>
+        </div>
+      </label>
+    </div>
+    <div class="picks" style="margin-top:12px">
+      <label class="f"><span>Power %</span><input type="number" id="rPwr" value="100" min="1" max="100"></label>
+      <label class="f"><span>Speed <em class="uu">mm/min</em></span><input type="number" id="rV" value="460" min="0.1" step="1"></label>
+      <label class="f"><span>Passes</span><input type="number" id="rPasses" value="1" min="1" max="30"></label>
+    </div>
+    <label class="f" style="margin-top:12px"><span>What to watch for</span>
+      <textarea id="rNotes" rows="2" placeholder="Masked with paper tape. Back face clean. Sheet from Woodcraft, Aug batch."></textarea>
+    </label>
+    <label class="f" style="margin-top:12px"><span>Photo of the test burn</span>
+      <input type="file" id="rImg" accept="image/*" style="border:0;background:none;padding:6px 0;font-family:var(--mono);font-size:12px">
+    </label>
+    <div id="rPrev"></div>
+    <div class="btns">
+      <button class="act" id="rSave">Save recipe</button>
+      <button class="act ghost" id="rReset">Clear</button>
+      <button class="act ghost" id="rExport">Export book</button>
+      <label class="act ghost" style="cursor:pointer">Import book<input type="file" id="rImport" accept=".json" class="hidden"></label>
+    </div>
+    <div id="rMsg" style="margin-top:14px"></div>
+  </div>
+  <div class="card">
+    <h2 class="sec">The book <span id="rCount" style="float:right"></span></h2>
+    <div id="rList"></div>
+  </div>
+</section>
+
+<!-- ================= TEST BAKE ================= -->
+<section id="tab-test" class="hidden">
+  <div class="card">
+    <h2 class="sec">Test bake</h2>
+    <p class="hint">A grid built around the recipe on the previous page: five power levels by five speeds, each cell its own colour so you can set power and speed per layer in LightBurn. Run it on the same sheet you're about to use.</p>
+    <div class="btns" style="margin-top:0">
+      <button class="act" id="tcDl">Download the grid (SVG)</button>
+      <button class="act ghost" id="tcRebuild">Rebuild from current recipe</button>
+    </div>
+    <div id="tcPreview" style="margin-top:18px"></div>
+  </div>
+  <div class="card">
+    <h2 class="sec">Layer settings</h2>
+    <div id="tcLegend"></div>
+  </div>
+  <div class="card">
+    <h2 class="sec">Reading it</h2>
+    <ul class="notes">
+      <li>For cuts, the winner is the fastest cell that pushes out cleanly with the least char on the back face.</li>
+      <li>For engraving, judge under the light the finished part will live in. Contrast matters more than depth.</li>
+      <li>Write the winner on the offcut with the date and the sheet's supplier, then save it as a recipe.</li>
+      <li>Run it again after a lens clean or a new sheet supplier. Plywood varies more than people expect.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= PANTRY ================= -->
+<section id="tab-pantry" class="hidden">
+  <div class="card">
+    <h2 class="sec">Never in the laser</h2>
+    <div class="caution" style="margin:0 0 12px">Chlorinated and fluorinated plastics give off acid gas that ruins the machine and hurts people. No label, no SDS, no cutting.</div>
+    <div id="banTable"></div>
+  </div>
+  <div class="card">
+    <h2 class="sec">What the pantry holds</h2>
+    <p class="hint">Cut depths assume a healthy machine. "Mark" means surface only — no through-cutting, ever.</p>
+    <div id="refTable"></div>
+  </div>
+  <div class="card">
+    <h2 class="sec">House rules</h2>
+    <ul class="notes" id="rules"></ul>
+  </div>
+</section>
+
+<p class="foot">Every recipe here is a starting point. The sheet in front of you is the final authority.</p>
+</div>
+
+<script>
+"use strict";
+/* =======================================================================
+   MACHINES
+   ======================================================================= */
+/* This lab runs one machine with three beam settings — the picker below
+   is those three, not a general-purpose machine catalogue. */
+const PRESETS=[
+ {id:"f2p40",name:"40 W — normal beam",type:"diode",watts:40,vmax:600,spot:0.15,
+  note:"Cutting mode. Two indicator lights lit. Hold Reset 2 s after power-on to switch beams."},
+ {id:"f2p20",name:"20 W — precise beam",type:"diode",watts:20,vmax:600,spot:0.10,
+  note:"One light lit. Half the power, a finer 0.10 mm spot — better for engraving and thin stock."},
+ {id:"f16",name:"1.6 W fine module",type:"diode",watts:1.6,vmax:600,spot:0.06,
+  note:"The swap-in module. Sharpest engraving in the lab; cutting is paper, card and veneer only."}
+];
+const DUTY={co2:85,diode:100,fiber:100};
+const ETAS={co2:0.85,diode:0.90,fiber:0.95};
+const PMAX={co2:8,diode:12,fiber:12};
+const VMIN={co2:2.5,diode:1.2,fiber:3};
+const MARGIN={fast:1.0,balanced:1.15,clean:1.32};
+
+/* =======================================================================
+   PANTRY  ·  k = J/mm at 1 mm (CO₂ reference) · eng = J/mm² · ab = per source
+   ======================================================================= */
+const M=[
+ {id:"ply",name:"Plywood, Baltic birch",cat:"Wood",k:1.5,tmax:18,abl:2.2,lpi:300,air:"high",mask:true,
+  eng:{light:.35,std:.8,deep:2.5},ab:{co2:1,diode:.85,fiber:null},
+  tips:["Glue lines are the wild card. If one test cell fails and its neighbours pass, you hit a void, not a settings problem.",
+        "Mask the face with low-tack paper tape, or wipe it damp before engraving, to keep smoke off the surface."],
+  warn:["Never leave wood running unattended. Smoke becomes flame in seconds, usually fed by scrap in the bed."]},
+ {id:"mdf",name:"MDF / hardboard",cat:"Wood",k:1.6,tmax:18,abl:2.2,lpi:300,air:"high",mask:true,
+  eng:{light:.4,std:.9,deep:3},ab:{co2:1,diode:.9,fiber:null},
+  tips:["Dense and resin-heavy: dark edges and a strong smell are normal.","No grain, so it engraves dead even — the best cheap stock for photo tests."],
+  warn:["Formaldehyde-bonded. Run extraction hard and don't cut it in a poorly ducted room."]},
+ {id:"bass",name:"Basswood / balsa",cat:"Wood",k:1.05,tmax:20,abl:1.9,lpi:300,air:"high",mask:true,
+  eng:{light:.22,std:.55,deep:1.8},ab:{co2:1,diode:.8,fiber:null},
+  tips:["The forgiving one — hand this to a first-timer.","Low density scorches easily, so favour more power at higher speed over a slow crawl."]},
+ {id:"hard",name:"Hardwood — maple, cherry, oak, walnut",cat:"Wood",k:1.8,tmax:12,abl:2.4,lpi:300,air:"high",mask:true,
+  eng:{light:.4,std:1,deep:3},ab:{co2:1,diode:.9,fiber:null},
+  tips:["Density varies inside one board, so engrave depth will too. Run artwork across the grain for the most even result.",
+        "Oak's open pores hold soot. Seal the surface first if the part must stay light."]},
+ {id:"acr",name:"Acrylic, cast — clear or coloured",cat:"Plastic",k:1,tmax:25,abl:3,lpi:350,air:"low",mask:false,
+  eng:{light:.25,std:.6,deep:2},ab:{co2:1,diode:null,fiber:null},
+  tips:["Cast gives the glassy flame-polished edge; extruded goes cloudy. Check the sheet label before promising anyone an edge.",
+        "Ease the air assist down — a hard blast chills the edge and leaves it matte.","Engraves frosted white. Raise line density before you raise power."]},
+ {id:"acrdk",name:"Acrylic, cast — black or dark",cat:"Plastic",k:1,tmax:25,abl:3,lpi:350,air:"low",mask:false,
+  eng:{light:.25,std:.6,deep:2},ab:{co2:1,diode:1.35,fiber:null},
+  tips:["The only acrylic a blue diode can touch, and it wants about a third more energy than a CO₂ would.",
+        "Engraves to a light grey frost against black — great contrast with no paint fill."]},
+ {id:"acrex",name:"Acrylic, extruded",cat:"Plastic",k:.9,tmax:20,abl:3,lpi:350,air:"low",mask:false,
+  eng:{light:.3,std:.75,deep:2.3},ab:{co2:1,diode:null,fiber:null},
+  tips:["Cuts easier, engraves dull. Use it for cut-only parts and hidden structure.","Melts back on tight inside corners — keep speed up and don't dwell."]},
+ {id:"leather",name:"Leather, vegetable-tanned",cat:"Natural",k:1,tmax:6,abl:1.8,lpi:300,air:"high",mask:false,
+  eng:{light:.2,std:.45,deep:1.2},ab:{co2:1,diode:1,fiber:null},
+  tips:["Engraving darkens rather than removes, so beautiful tonal work is possible at low power and high line density.",
+        "Wipe the surface damp first to cut the smoke halo around fine detail."],
+  warn:["Vegetable-tanned only. Chrome-tanned leather puts chromium in the fume."]},
+ {id:"cork",name:"Cork sheet",cat:"Natural",k:.8,tmax:8,abl:1.6,lpi:250,air:"high",mask:false,
+  eng:{light:.25,std:.5,deep:1.5},ab:{co2:1,diode:.95,fiber:null},
+  tips:["Crumbly edges are normal; slightly faster gives a cleaner lip than slower."]},
+ {id:"felt",name:"Felt, wool",cat:"Textile",k:.7,tmax:6,abl:1.6,lpi:200,air:"high",mask:false,
+  eng:{light:null,std:.2,deep:null},ab:{co2:1,diode:1.1,fiber:null},
+  tips:["Wool cuts with a sealed edge and no fray. Synthetic felt melts into a hard bead — check the fibre content."]},
+ {id:"fabric",name:"Cotton / denim",cat:"Textile",k:.4,tmax:2,abl:1.3,lpi:200,air:"high",mask:false,
+  eng:{light:.08,std:.18,deep:null},ab:{co2:1,diode:1.1,fiber:null},
+  tips:["Light raster passes give a faded, distressed look on denim.","Hold it flat. One lifted edge ruins the whole panel."]},
+ {id:"paper",name:"Paper / cardstock",cat:"Paper",k:.3,tmax:1,abl:1.2,lpi:200,air:"low",mask:false,
+  eng:{light:.06,std:.12,deep:null},ab:{co2:1,diode:1.1,fiber:null},
+  tips:["Score with one low-power vector line instead of engraving — it reads far better on thin stock.","Hold it down with magnets or a mat; curl is the only real failure."],
+  warn:["Ignites readily. Low power, high speed, and stay at the machine."]},
+ {id:"card",name:"Corrugated cardboard",cat:"Paper",k:.5,tmax:8,abl:1.3,lpi:200,air:"high",mask:false,
+  eng:{light:.15,std:.3,deep:.8},ab:{co2:1,diode:1.1,fiber:null},
+  tips:["The cheapest way to prove a layout or a jig before committing plywood.","Flutes cause patchy burn-through — two fast passes beat one slow one."]},
+ {id:"delrin",name:"Delrin / acetal",cat:"Plastic",k:1.5,tmax:10,abl:3.2,lpi:300,air:"high",mask:false,
+  eng:{light:.4,std:.9,deep:2.5},ab:{co2:1,diode:null,fiber:null},
+  tips:["Dimensionally stable — the pick for laser-cut gears and living hinges.","Strong smell; leave extraction running after the job."]},
+ {id:"pp",name:"Polypropylene sheet",cat:"Plastic",k:1.2,tmax:6,abl:2.8,lpi:250,air:"high",mask:false,
+  eng:{light:.3,std:.7,deep:null},ab:{co2:1,diode:null,fiber:null},
+  tips:["Melts as much as it cuts. Fast, high power, full air, and expect a rolled bead on the edge."]},
+ {id:"rubber",name:"Laser stamp rubber",cat:"Plastic",k:1.4,tmax:3,abl:2,lpi:300,air:"high",mask:false,
+  eng:{light:.6,std:1.6,deep:4},ab:{co2:1,diode:null,fiber:null},
+  tips:["Defocus slightly on deep passes for a tapered shoulder that survives use.","Clean the optics afterwards — rubber leaves a sticky dust."]},
+ {id:"eva",name:"EVA foam",cat:"Foam",k:.6,tmax:10,abl:1.5,lpi:200,air:"high",mask:false,
+  eng:{light:.3,std:.7,deep:2},ab:{co2:1,diode:1.2,fiber:null},
+  tips:["Cuts and engraves easily with a sealed, slightly beaded edge."]},
+ {id:"anod",name:"Anodized aluminium — mark",cat:"Metal",k:null,tmax:0,abl:.12,lpi:500,air:"low",mask:false,
+  eng:{light:.1,std:.3,deep:null},ab:{co2:1,diode:1.6,fiber:.6},
+  tips:["The beam bleaches the dye, it doesn't cut metal. Crisp white mark at low power and high speed.",
+        "Push line density to 400–600. Contrast is everything; depth is irrelevant.","Test on the back — anodizing thickness varies between batches."],
+  warn:["Marking only. No laser in this lab cuts aluminium."]},
+ {id:"marked",name:"Bare metal + marking compound",cat:"Metal",k:null,tmax:0,abl:.3,lpi:400,air:"low",mask:false,
+  eng:{light:.4,std:1,deep:null},ab:{co2:1,diode:null,fiber:null},
+  tips:["Spray thin and even; thick coats mark grey and blurry. Wash the excess off with water.",
+        "Two moderate passes bond better than one heavy one."],
+  warn:["No compound means no mark — and bare polished metal can bounce the beam into the optics."]},
+ {id:"painted",name:"Painted / powder-coated metal",cat:"Metal",k:null,tmax:0,abl:.2,lpi:400,air:"low",mask:false,
+  eng:{light:.2,std:.45,deep:null},ab:{co2:1,diode:1.4,fiber:.7},
+  tips:["Clearing coating to bright substrate gives excellent contrast at low power. Stop as soon as substrate shows.",
+        "Powder coat is thicker than wet paint and needs noticeably more energy."]},
+ {id:"steel",name:"Stainless steel — fiber only",cat:"Metal",k:14,tmax:1.5,abl:.8,lpi:400,air:"high",mask:false,
+  eng:{light:.6,std:2,deep:8},ab:{co2:null,diode:null,fiber:1},
+  tips:["Pulse frequency matters as much as power. A black annealed mark is low power, high frequency, slow speed."],
+  warn:["Metal cutting throws hot spatter and fume. Clean bed, full extraction."]},
+ {id:"glass",name:"Glass — frost",cat:"Brittle",k:null,tmax:0,abl:8,lpi:300,air:"low",mask:false,
+  eng:{light:.3,std:.7,deep:null},ab:{co2:1,diode:null,fiber:null},
+  tips:["You're micro-fracturing the surface. Use dithering or a halftone, never greyscale.",
+        "Lay wet newspaper or dish soap over the area — it wicks heat and gives a smoother frost with fewer chips."],
+  warn:["Cannot be cut. Curved parts need a rotary."]},
+ {id:"slate",name:"Slate / stone coaster",cat:"Brittle",k:null,tmax:0,abl:6,lpi:300,air:"low",mask:false,
+  eng:{light:.25,std:.6,deep:null},ab:{co2:1,diode:1.3,fiber:null},
+  tips:["Engraves bright white with almost no effort — the highest-contrast result in the lab.","Wipe damp afterwards to lift the dust hiding fine detail."]},
+ {id:"tile",name:"Glazed ceramic tile",cat:"Brittle",k:null,tmax:0,abl:5,lpi:300,air:"low",mask:false,
+  eng:{light:.4,std:1,deep:null},ab:{co2:1,diode:null,fiber:null},
+  tips:["Bare glaze marks faintly; marking spray fuses a permanent image.","Let it cool before handling or thermal shock can crack it."]}
+];
+
+const BANNED=[
+ ["PVC, vinyl, faux leather, cling film","Hydrogen chloride gas. Corrodes rails, optics and lungs — the single worst thing you can put in a laser."],
+ ["Polycarbonate / Lexan","Yellows, catches fire, thick soot. Use acrylic."],
+ ["ABS","Melts instead of cutting and emits hydrogen cyanide."],
+ ["PTFE / Teflon","Releases fluorine compounds when heated."],
+ ["Fiberglass, FR-4, PCB blanks","Toxic fume plus severe optics contamination."],
+ ["Carbon fibre composite","Resin fume and conductive dust that gets into electronics."],
+ ["HDPE, milk-jug plastic, foam block","Melts, drips and keeps burning."],
+ ["Chrome-tanned leather","Chromium in the fume."],
+ ["Galvanised or zinc-coated steel","Zinc fume causes metal fume fever."],
+ ["Anything unlabelled","If nobody can name the material, it doesn't go in."]
+];
+
+const RULES=[
+ ["Focus first, blame settings last.","Most \u201cthe laser got weaker\u201d reports are a dirty lens, a knocked focus, or mirrors out of alignment."],
+ ["Clean the optics weekly.","A hazy lens costs 20–30% of real power and looks exactly like a dying machine."],
+ ["Nothing loose in or under the bed.","Most laser fires are fed by offcuts, not the workpiece."],
+ ["Someone stays in the room.","Attended operation, extinguisher in reach, every new user shown where it is."],
+ ["Inner cuts before outer.","Parts stay registered until the final contour releases them."],
+ ["Kerf is a design input.","Measure it once per material, then build it into your joints instead of sanding parts to fit."],
+ ["Slow is not safer.","Long dwell chars, widens the kerf and starts fires. Two fast passes run cooler than one slow one."],
+ ["Write it down.","If it worked, it belongs in this book with a photo. Tribal knowledge leaves when people do."]
+];
+
+/* =======================================================================
+   STATE + STORAGE
+   ======================================================================= */
+const S={mode:"cut",tier:"std",qual:"balanced",matId:"ply",presetId:"f2p40",
+  machine:{...PRESETS[0]},unit:"mmmin",recipes:[],tune:{},drift:{},rMode:"cut",last:null};
+const KEY="lrb_v1", RKEY="lrb_recipes_v1";
+let store=null, memImg={};
+
+async function loadAll(){
+  if(!window.storage) return; store=window.storage;
+  try{ const r=await store.get(KEY); if(r&&r.value){ const d=JSON.parse(r.value);
+    if(d.tune)S.tune=d.tune; if(d.unit)S.unit=d.unit; if(d.drift)S.drift=d.drift;
+    if(d.presetId)S.presetId=d.presetId;
+    const base=PRESETS.find(x=>x.id===S.presetId)||PRESETS[0], dr=S.drift[S.presetId];
+    S.machine=dr?{...base,...dr}:{...base}; } }catch(e){}
+  try{ const r=await store.get(RKEY); if(r&&r.value) S.recipes=JSON.parse(r.value)||[]; }catch(e){}
+}
+async function save(){ try{ if(store) await store.set(KEY,JSON.stringify({tune:S.tune,unit:S.unit,presetId:S.presetId,drift:S.drift})); }catch(e){} }
+async function saveBook(){ try{ if(store) await store.set(RKEY,JSON.stringify(S.recipes)); }catch(e){} }
+async function putImg(id,d){ memImg[id]=d; try{ if(store) await store.set("img:"+id,d); }catch(e){} }
+async function getImg(id){ if(memImg[id]) return memImg[id];
+  try{ if(store){ const r=await store.get("img:"+id); if(r&&r.value){ memImg[id]=r.value; return r.value; } } }catch(e){} return null; }
+async function delImg(id){ delete memImg[id]; try{ if(store) await store.delete("img:"+id); }catch(e){} }
+
+/* =======================================================================
+   HELPERS
+   ======================================================================= */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const UNITS={mmmin:{label:"mm/min",f:60,dp:0},mms:{label:"mm/s",f:1,dp:1}};
+const uni=()=>UNITS[S.unit]||UNITS.mmmin;
+const outSpd=v=>v*uni().f, inSpd=x=>x/uni().f;
+const fmt=(n,d=1)=>Number(n).toFixed(d).replace(/\.0+$/,"");
+const spd=v=>`${fmt(outSpd(v),uni().dp)} ${uni().label}`;
+const esc=x=>String(x==null?"":x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const matById=id=>M.find(m=>m.id===id);
+const srcName=t=>t==="co2"?"CO₂ 10.6 µm":t==="diode"?"455 nm diode":"1064 nm fiber";
+const tuneKey=id=>`${S.machine.type}|${Math.round(S.machine.watts)}|${id}`;
+const kFor=m=>{const t=S.tune[tuneKey(m.id)];return t?t.k:m.k;};
+const tuned=m=>!!S.tune[tuneKey(m.id)];
+function fmtTime(s){s=Math.round(s);if(s<90)return s+" s";const m=Math.floor(s/60);return m<60?`${m} min ${s%60} s`:`${Math.floor(m/60)} h ${m%60} min`;}
+
+/* =======================================================================
+   THE MATHS  ·  cutting is joules per mm of travel; engraving per mm²
+   ======================================================================= */
+function estimateCut(m,t,mach,qual){
+  const ab=m.ab[mach.type], out={mode:"cut",ok:false,notes:[]};
+  if(m.k==null){ out.reason=`${m.name} is a surface material — it marks, it never cuts through.`; return out; }
+  if(ab==null){ out.reason=`A ${srcName(mach.type)} beam won't cut ${m.name}. Wrong wavelength for this material.`; return out; }
+  const E=kFor(m)*Math.pow(t,1.15)*ab*MARGIN[qual];
+  const cap=qual==="fast"?Math.min(100,DUTY[mach.type]+10):DUTY[mach.type];
+  const P=mach.watts*cap/100, eta=ETAS[mach.type], vmin=VMIN[mach.type];
+  let passes=0,v=0;
+  for(let p=1;p<=PMAX[mach.type];p++){ const vp=P*p*Math.pow(eta,p-1)/E; if(vp>=vmin){passes=p;v=vp;break;} }
+  if(!passes){ out.reason=`${fmt(t,2)} mm of ${m.name} is past what ${mach.watts} W can manage — even ${PMAX[mach.type]} passes stall below ${spd(vmin)}. Go thinner, use a stronger beam, or laminate two cuts.`; return out; }
+  let pwr=cap;
+  if(v>mach.vmax){ v=mach.vmax; pwr=Math.max(4,(E*v/passes/Math.pow(eta,passes-1))/mach.watts*100);
+    out.notes.push(`The machine's top speed is the limit here, so power comes down instead. Anything at or below ${Math.round(pwr)}% still cuts.`); }
+  if(passes>1) out.notes.push(`${passes} passes because one pass would need ${spd(P/E)} — slow enough to char and risk a flare-up.`);
+  if(t>m.tmax) out.notes.push(`${fmt(t,2)} mm is thicker than this material usually goes. Expect a tapered edge.`);
+  if(mach.watts<5) out.notes.push("A module under 5 W is a fine-detail engraver first. Cutting means paper, card and veneer.");
+  if(mach.type==="fiber"){ const n=Math.max(5,Math.min(60,Math.round(mach.vmax*.4/v)));
+    out.notes.push(`Galvo machines deliver this as many fast passes, not one crawl: about ${n} passes at ${spd(v*n)}.`); }
+  Object.assign(out,{ok:true,E,v,pwr,passes,kerf:mach.spot+0.02*t,secPerM:1000/v*passes*1.15});
+  return out;
+}
+function estimateEngrave(m,mach,tier){
+  const ab=m.ab[mach.type], out={mode:"engrave",ok:false,notes:[]};
+  if(ab==null){ out.reason=`A ${srcName(mach.type)} beam isn't absorbed usefully by ${m.name}.`; return out; }
+  const target=m.eng[tier];
+  if(target==null){ out.reason=`That depth isn't a sensible operation on ${m.name}. Try another one.`; return out; }
+  const Ea=target*ab, lpi=m.lpi, interval=25.4/lpi, cap=DUTY[mach.type];
+  const levels=[100,90,80,70,60,50,40,35,30,25,20,15,12,10].filter(p=>p<=cap);
+  const vAt=p=>(mach.watts*p/100)/(Ea*interval);
+  const floor=Math.max(25,VMIN[mach.type]*6), sweet=mach.vmax*.7;
+  let pick=null;
+  for(const p of levels){const v=vAt(p); if(v<=sweet&&v>=floor){pick={p,v};break;}}
+  if(!pick) for(const p of levels){const v=vAt(p); if(v<=mach.vmax&&v>=floor){pick={p,v};break;}}
+  if(!pick){
+    const lo=levels[levels.length-1], vlo=vAt(lo), hi=levels[0], vhi=vAt(hi);
+    if(vlo>mach.vmax){ const v=mach.vmax; pick={p:(Ea*interval*v)/mach.watts*100,v};
+      out.notes.push("This needs so little energy that your top speed is the limit. Raise line density or use the lowest stable power."); }
+    else { pick={p:hi,v:Math.max(vhi,2)};
+      out.notes.push(`Full power just to reach ${spd(Math.max(vhi,2))} — a slow job on this beam. A stronger module does it in a fraction of the time.`); }
+  }
+  const passes = tier==="deep" ? (Ea>2.5?3:Ea>1.5?2:1) : 1;
+  const surface = m.cat==="Metal"||m.cat==="Brittle";
+  Object.assign(out,{ok:true,Ea,v:pick.v,pwr:Math.min(cap,Math.max(3,pick.p)),passes,lpi,interval,
+    kerf:mach.spot, depth: surface?0:Math.min(1.5,(Ea*passes*.4)/m.abl),
+    secPerArea:(10000/interval)/pick.v*1.25*passes});
+  if(surface) out.notes.push("This is a surface effect — judge it by contrast, not depth.");
+  if(mach.spot<=0.08) out.notes.push(`A ${mach.spot} mm spot resolves about ${Math.round(25.4/mach.spot)} lines per inch. Push line density up — that's what this module is for.`);
+  if(mach.type==="co2"&&out.pwr<10) out.notes.push("Under 10% a CO₂ tube fires unevenly and bands. Raise line density or speed instead.");
+  return out;
+}
+
+/* =======================================================================
+   THE RECIPE PAGE
+   ======================================================================= */
+function method(m,r,mach){
+  const st=[];
+  st.push("Check focus and that the lens is clean. Most bad results start here, not in the numbers.");
+  if(S.mode==="cut"&&m.mask) st.push("Mask the face with low-tack paper tape, or wipe it damp, to keep smoke off the surface.");
+  st.push(`Set air assist ${m.air==="high"?"to full — it clears the kerf and keeps flame off the surface":"low — just enough to stop flame, not enough to chill the edge"}.`);
+  st.push(`Dial in ${fmt(r.pwr,0)}% power at ${spd(r.v)}${r.passes>1?`, ${r.passes} passes`:""}${S.mode==="engrave"?` and ${r.lpi} lines per inch`:""}.`);
+  if(S.mode==="cut") st.push("Cut a small square in the corner of the sheet first. If it doesn't release cleanly, run a test bake before the real job.");
+  else st.push("Run a 20 mm patch first and look at it in the light the finished part will live in.");
+  if(S.mode==="cut") st.push("Inner features before outer contours, so parts stay registered until the last cut releases them.");
+  if(r.passes>1&&S.mode==="cut") st.push("Leave focus where it started between passes and give the part a few seconds to cool.");
+  st.push("If it worked, save it as a recipe with a photo of the result.");
+  return st;
+}
+function renderRecipe(){
+  const m=matById(S.matId), mach=S.machine, t=parseFloat($("#thick").value)||1;
+  document.body.dataset.mode=S.mode;
+  const r=S.mode==="cut"?estimateCut(m,t,mach,S.qual):estimateEngrave(m,mach,S.tier);
+  S.last={r,m,t};
+  const saved=S.recipes.find(x=>x.matId===m.id&&x.mode===S.mode&&(!x.machine||x.machine.type===mach.type&&Math.round(x.machine.watts)===Math.round(mach.watts)));
+  const title=`${m.name} — ${S.mode==="cut"?`cut ${fmt(t,2)} mm`:`${S.tier==="std"?"standard":S.tier} engrave`}`;
+  let h=`<div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+    <div><h3 class="recipe">${esc(title)}</h3>
+    <p class="yield">${esc(mach.name)} · ${srcName(mach.type)} · ${mach.watts} W · ${mach.spot} mm spot</p></div>
+    <span class="stamp ${!r.ok?"no":tuned(m)?"":"est"}">${!r.ok?"not possible":tuned(m)?"tuned to this machine":"estimate"}</span></div>`;
+
+  if(saved) h+=`<div class="good" style="margin-top:16px"><b>Your recipe: ${esc(saved.name)}</b><br>
+    <span style="font-family:var(--mono);font-size:13.5px">${fmt(saved.pwr,0)}% · ${spd(saved.v)} · ${saved.passes} pass${saved.passes>1?"es":""}</span><br>
+    Proven on the machine — use it over the numbers below unless the sheet or the job has changed.</div>`;
+
+  if(!r.ok){
+    h+=`<div class="caution" style="margin-top:16px">${esc(r.reason)}</div>`;
+    $("#recipeCard").innerHTML=h; return;
+  }
+
+  h+=`<div class="band">
+    <div><div class="k">power</div><div class="v">${fmt(r.pwr,0)}%<small>${fmt(mach.watts*r.pwr/100,0)} W at the work</small></div></div>
+    <div><div class="k">speed</div><div class="v">${fmt(outSpd(r.v),uni().dp)}<small>${uni().label}${S.unit==="mmmin"?` · ${fmt(r.v,1)} mm/s`:` · ${fmt(r.v*60,0)} mm/min`}</small></div></div>
+    <div><div class="k">passes</div><div class="v">${r.passes}<small>${r.passes>1?"same focus each time":"single pass"}</small></div></div>
+  </div>`;
+
+  const L=[];
+  if(S.mode==="cut"){
+    L.push(["Kerf width",`${fmt(r.kerf,2)} mm — offset ${fmt(r.kerf/2,2)} mm per side`]);
+    L.push(["Energy into the sheet",`${fmt(r.E,1)} J per mm of cut`]);
+    L.push(["Time per metre of cut",fmtTime(r.secPerM)]);
+  }else{
+    L.push(["Lines per inch",`${r.lpi} · ${fmt(r.interval,3)} mm apart`]);
+    if(r.depth>0) L.push(["Depth to expect",`${fmt(r.depth,2)} mm`]);
+    L.push(["Time per 100 cm²",fmtTime(r.secPerArea)]);
+  }
+  L.push(["Air assist",m.air==="high"?"full":"low"]);
+  h+=`<h2 class="sec" style="margin-top:20px">At a glance</h2>`;
+  h+=L.map(([a,b])=>`<div class="leader"><span class="lbl">${a}</span><span class="dots"></span><span class="val">${b}</span></div>`).join("");
+
+  h+=`<h2 class="sec" style="margin-top:22px">Method</h2><ol class="method">${method(m,r,mach).map(s=>`<li>${s}</li>`).join("")}</ol>`;
+
+  const notes=[...r.notes,...(m.tips||[]),...(mach.note?[mach.note]:[])];
+  if(notes.length) h+=`<h2 class="sec" style="margin-top:22px">Notes from the lab</h2><ul class="notes">${notes.map(n=>`<li>${n}</li>`).join("")}</ul>`;
+  (m.warn||[]).forEach(w=>h+=`<div class="caution">${w}</div>`);
+
+  h+=`<div class="btns">
+    <button class="act" id="copyR">Copy the recipe</button>
+    <button class="act ghost" id="saveR">Save to my recipes</button>
+    <button class="act ghost" id="testR">Test bake this</button>
+  </div>`;
+  $("#recipeCard").innerHTML=h;
+  $("#copyR").onclick=copyRecipe;
+  $("#saveR").onclick=prefillFromEstimate;
+  $("#testR").onclick=()=>{ buildCard(); go("test"); };
+}
+function recipeText(){
+  const {r,m,t}=S.last||{}; if(!m) return "";
+  const mach=S.machine;
+  let s=`${m.name} — ${S.mode==="cut"?`cut ${fmt(t,2)} mm`:S.tier+" engrave"}\n`;
+  s+=`${mach.name} · ${mach.watts} W · ${mach.spot} mm spot · ${new Date().toISOString().slice(0,10)}\n`;
+  if(!r.ok) return s+`Not possible: ${r.reason}\n`;
+  s+=`\nPower   ${fmt(r.pwr,0)}%\nSpeed   ${spd(r.v)}\nPasses  ${r.passes}\n`;
+  s+=S.mode==="cut"?`Kerf    ${fmt(r.kerf,2)} mm\n`:`LPI     ${r.lpi}\n`;
+  s+=`Air     ${m.air==="high"?"full":"low"}\n\nMethod\n`;
+  s+=method(m,r,mach).map((x,i)=>`${i+1}. ${x}`).join("\n");
+  const n=[...r.notes,...(m.tips||[]),...(m.warn||[])];
+  if(n.length) s+=`\n\nNotes\n`+n.map(x=>`- ${x}`).join("\n");
+  return s+"\n";
+}
+async function copyRecipe(){
+  const t=recipeText();
+  try{ await navigator.clipboard.writeText(t); }
+  catch(e){ const ta=document.createElement("textarea"); ta.value=t; document.body.append(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
+  $("#copyR").textContent="Copied"; setTimeout(()=>{const b=$("#copyR"); if(b)b.textContent="Copy the recipe";},1400);
+}
+
+/* =======================================================================
+   MY RECIPES
+   ======================================================================= */
+function shrink(file,max=1000,q=.72){return new Promise((res,rej)=>{
+  const fr=new FileReader();
+  fr.onload=()=>{const img=new Image();
+    img.onload=()=>{const sc=Math.min(1,max/Math.max(img.width,img.height));
+      const c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round(img.width*sc)); c.height=Math.max(1,Math.round(img.height*sc));
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height); res(c.toDataURL("image/jpeg",q));};
+    img.onerror=()=>rej(new Error("That file didn't open as an image.")); img.src=fr.result;};
+  fr.onerror=()=>rej(new Error("Couldn't read that file.")); fr.readAsDataURL(file);});}
+const rid=()=>"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+let pendingImg=null, editId=null;
+const msg=(h,bad)=>$("#rMsg").innerHTML=h?`<div class="${bad?"caution":"good"}">${h}</div>`:"";
+
+async function saveRecipe(){
+  const name=$("#rName").value.trim(), m=matById($("#rMat").value);
+  const t=+$("#rT").value, pwr=+$("#rPwr").value, v=inSpd(+$("#rV").value), passes=Math.max(1,+$("#rPasses").value||1);
+  if(!name){ msg("Give it a name — that's how people find it.",true); return; }
+  if(!(pwr>0&&v>0)){ msg("Power and speed both need a real value.",true); return; }
+  const id=editId||rid(), old=S.recipes.find(x=>x.id===id);
+  const rec={id,name,matId:m.id,matName:m.name,mode:S.rMode,t,pwr,v,passes,notes:$("#rNotes").value.trim(),
+    machine:{name:S.machine.name,type:S.machine.type,watts:S.machine.watts},
+    when:new Date().toISOString().slice(0,10),hasImg:!!(old&&old.hasImg)};
+  if(pendingImg){ await putImg(id,pendingImg); rec.hasImg=true; pendingImg=null; }
+  if(old) S.recipes[S.recipes.indexOf(old)]=rec; else S.recipes.unshift(rec);
+  await saveBook();
+  let extra="";
+  if(rec.mode==="cut"&&m.k!=null&&m.ab[S.machine.type]!=null){
+    const P=S.machine.watts*rec.pwr/100, ab=m.ab[S.machine.type];
+    const k=(P*rec.passes*Math.pow(ETAS[S.machine.type],rec.passes-1))/(rec.v*Math.pow(rec.t,1.15)*ab);
+    S.tune[tuneKey(m.id)]={k,at:{t:rec.t,pwr:rec.pwr,v:rec.v,p:rec.passes},when:rec.when,from:rec.name};
+    await save();
+    extra=` Estimates for ${esc(m.name)} at every thickness now follow your numbers instead of the book's.`;
+  }
+  editId=null; $("#rSave").textContent="Save recipe";
+  msg(`Saved <b>${esc(rec.name)}</b>.${extra}`);
+  renderBook(); renderRecipe();
+}
+function resetForm(){
+  ["#rName","#rNotes"].forEach(s=>$(s).value="");
+  $("#rT").value=3; $("#rPwr").value=100; $("#rPasses").value=1; $("#rV").value=Math.round(outSpd(8));
+  $("#rImg").value=""; $("#rPrev").innerHTML=""; pendingImg=null; editId=null;
+  $("#rSave").textContent="Save recipe"; msg("");
+}
+function prefillFromEstimate(){
+  const st=S.last; if(!st||!st.r.ok) return;
+  const {r,m,t}=st; editId=null; S.rMode=S.mode; pendingImg=null;
+  $("#rName").value=`${m.name} — ${S.mode==="cut"?fmt(t,2)+" mm cut":"engrave"}`;
+  $("#rMat").value=m.id; $("#rT").value=t; $("#rPwr").value=Math.round(r.pwr);
+  $("#rV").value=fmt(outSpd(r.v),uni().dp); $("#rPasses").value=r.passes;
+  $("#rNotes").value=""; $("#rPrev").innerHTML="";
+  $$("#segRMode button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===S.mode?"true":"false"));
+  $("#rSave").textContent="Save recipe";
+  go("book"); msg("Prefilled from the estimate. Change it to what actually worked, add a photo, then save.");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderBook(){
+  $("#rCount").innerHTML=`<span class="stamp est">${S.recipes.length} saved</span>`;
+  if(!S.recipes.length){ $("#rList").innerHTML=`<p class="hint">Nothing saved yet. The first proven setting you write down here becomes the lab's standard.</p>`; return; }
+  $("#rList").innerHTML=S.recipes.map(r=>`<div class="rec">
+    <div class="thumb" id="th-${r.id}">${r.hasImg?"loading":"no photo"}</div>
+    <div>
+      <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline">
+        <b style="font-family:var(--serif);font-size:19px;color:#fff">${esc(r.name)}</b>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--ink3)">${esc(r.machine?.name||"")} · ${r.when}</span>
+      </div>
+      <div style="font-family:var(--mono);font-size:13px;color:var(--ink2);margin:3px 0 6px">
+        ${esc(r.matName)} · ${r.mode==="cut"?`cut ${fmt(r.t,2)} mm`:"engrave"} · <b style="color:var(--neon);text-shadow:0 0 10px rgba(255,32,54,.45)">${fmt(r.pwr,0)}% · ${spd(r.v)} · ${r.passes}×</b>
+      </div>
+      ${r.notes?`<div style="font-size:14px;color:var(--ink2);margin-bottom:6px">${esc(r.notes)}</div>`:""}
+      <div class="btns" style="margin-top:4px">
+        <button class="act ghost mini" data-use="${r.id}">Open</button>
+        <button class="act ghost mini" data-edit="${r.id}">Edit</button>
+        <button class="act ghost mini" data-photo="${r.id}">${r.hasImg?"Replace photo":"Add photo"}</button>
+        <button class="act ghost mini" data-del="${r.id}">Delete</button>
+      </div>
+    </div></div>`).join("");
+  S.recipes.filter(r=>r.hasImg).forEach(async r=>{
+    const d=await getImg(r.id), el=$("#th-"+r.id); if(!el) return;
+    if(d){ el.innerHTML=`<img src="${d}" alt="Test burn for ${esc(r.name)}" style="width:100%;height:100%;object-fit:cover">`;
+      el.style.cursor="zoom-in"; el.onclick=()=>lightbox(d,r.name); }
+    else el.textContent="photo missing";
+  });
+  $$("[data-use]").forEach(b=>b.onclick=()=>{
+    const r=S.recipes.find(x=>x.id===b.dataset.use);
+    S.matId=r.matId; $("#mat").value=r.matId; S.mode=r.mode; $("#thick").value=r.t;
+    $$("#segMode button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===r.mode?"true":"false"));
+    modeUI(); renderRecipe(); go("cook");
+  });
+  $$("[data-edit]").forEach(b=>b.onclick=()=>{
+    const r=S.recipes.find(x=>x.id===b.dataset.edit); editId=r.id; S.rMode=r.mode;
+    $("#rName").value=r.name; $("#rMat").value=r.matId; $("#rT").value=r.t; $("#rPwr").value=Math.round(r.pwr);
+    $("#rV").value=fmt(outSpd(r.v),uni().dp); $("#rPasses").value=r.passes; $("#rNotes").value=r.notes||"";
+    $$("#segRMode button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===r.mode?"true":"false"));
+    $("#rSave").textContent="Update recipe"; msg(`Editing <b>${esc(r.name)}</b>. Saving overwrites it.`);
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+  $$("[data-photo]").forEach(b=>b.onclick=()=>{ editId=b.dataset.photo; $("#rImg").click(); });
+  $$("[data-del]").forEach(b=>b.onclick=async()=>{
+    const r=S.recipes.find(x=>x.id===b.dataset.del);
+    if(!confirm(`Delete "${r.name}"? The photo goes with it.`)) return;
+    await delImg(r.id); S.recipes=S.recipes.filter(x=>x.id!==r.id); await saveBook(); renderBook(); renderRecipe();
+  });
+}
+function lightbox(src,cap){
+  const d=document.createElement("div");
+  d.style.cssText="position:fixed;inset:0;background:rgba(10,7,8,.93);z-index:99;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;padding:22px;cursor:zoom-out";
+  d.innerHTML=`<img src="${src}" style="max-width:100%;max-height:82vh;border:2px solid var(--neon);box-shadow:0 0 30px rgba(255,32,54,.5)"><div style="font-family:var(--mono);font-size:11px;color:var(--cob);letter-spacing:.14em;text-transform:uppercase">${esc(cap)} — click to close</div>`;
+  d.onclick=()=>d.remove(); document.body.append(d);
+}
+
+/* =======================================================================
+   TEST BAKE  ·  5 × 5 grid bracketed around the current recipe
+   ======================================================================= */
+const COLORS=["#000000","#0000FF","#FF0000","#FF00FF","#008000","#00FFFF","#804000","#FF8000","#8000FF","#00A0A0",
+"#FFA0A0","#A0A0FF","#606000","#00A000","#A00000","#0000A0","#A000A0","#00A0FF","#A0A000","#4080A0",
+"#804060","#408060","#A04000","#606060","#20A080"];
+let cardSVG=null;
+function buildCard(){
+  const st=S.last;
+  if(!st||!st.r.ok){ $("#tcPreview").innerHTML=`<p class="hint">Pick a workable material and operation on the recipe page first.</p>`; $("#tcLegend").innerHTML=""; cardSVG=null; return; }
+  const r=st.r, cut=st.r.mode==="cut";
+  const plo=Math.max(5,Math.round(r.pwr*.7)), phi=Math.min(100,Math.round(r.pwr*1.15));
+  const vlo=r.v*.6, vhi=r.v*1.5, rows=5, cols=5;
+  const cw=cut?12:16, ch=cut?12:11, gap=6, padL=22, padT=18;
+  const W=padL+cols*(cw+gap)+10, H=padT+rows*(ch+gap)+16;
+  let g="",ax="",legend=[],n=0;
+  for(let i=0;i<rows;i++){
+    const p=plo+(phi-plo)*i/(rows-1);
+    ax+=`<text x="2" y="${padT+i*(ch+gap)+ch/2+1.2}" font-family="monospace" font-size="3.4">${Math.round(p)}</text>`;
+    for(let j=0;j<cols;j++){
+      const v=vlo+(vhi-vlo)*j/(cols-1), col=COLORS[n], x=padL+j*(cw+gap), y=padT+i*(ch+gap);
+      g+=cut?`<rect x="${x}" y="${y}" width="${cw}" height="${ch}" fill="none" stroke="${col}" stroke-width="0.1"/>`
+            :`<rect x="${x}" y="${y}" width="${cw}" height="${ch}" fill="${col}"/>`;
+      legend.push({n:++n,col,p:Math.round(p),v});
+    }
+  }
+  for(let j=0;j<cols;j++){ const v=vlo+(vhi-vlo)*j/(cols-1);
+    ax+=`<text x="${padL+j*(cw+gap)}" y="${padT-5}" font-family="monospace" font-size="3.4">${Math.round(outSpd(v))}</text>`; }
+  ax+=`<text x="${padL}" y="${H-6}" font-family="monospace" font-size="3">rows = power %   columns = ${uni().label}   ${esc(st.m.name)}</text>`;
+  cardSVG=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}mm" height="${H}mm" viewBox="0 0 ${W} ${H}"><g fill="#000000">${ax}</g>${g}</svg>`;
+  $("#tcPreview").innerHTML=`<div style="background:#fff;border:1px solid var(--cob);border-radius:3px;padding:12px;box-shadow:0 0 26px rgba(255,180,90,.28)">
+    ${cardSVG.replace(`width="${W}mm" height="${H}mm"`,'width="100%"')}</div>
+    <p class="hint" style="margin-top:10px">${W} × ${H} mm, built around ${fmt(r.pwr,0)}% at ${spd(r.v)}. Black text is the label layer — engrave it light.</p>`;
+  $("#tcLegend").innerHTML=`<table><tr><th>#</th><th>Layer colour</th><th>Power %</th><th>Speed ${uni().label}</th></tr>${
+    legend.map(l=>`<tr><td class="n">${l.n}</td><td><span class="sw" style="background:${l.col}"></span><span class="n">${l.col}</span></td>
+    <td class="n">${l.p}</td><td class="n">${fmt(outSpd(l.v),uni().dp)}</td></tr>`).join("")}</table>`;
+}
+function dl(blob,name){ const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),2000); }
+
+/* =======================================================================
+   PANTRY
+   ======================================================================= */
+function renderPantry(){
+  $("#banTable").innerHTML=`<table><tr><th>Material</th><th>Why not</th></tr>${
+    BANNED.map(([a,b])=>`<tr><td><b>${a}</b></td><td style="color:var(--ink2)">${b}</td></tr>`).join("")}</table>`;
+  $("#refTable").innerHTML=`<table><tr><th>Material</th><th>CO₂</th><th>Diode</th><th>Fiber</th><th>Cuts to</th><th>LPI</th><th>Air</th></tr>${
+    M.map(m=>`<tr><td>${m.name}</td>${["co2","diode","fiber"].map(x=>{
+      const ab=m.ab[x];
+      return `<td class="n" style="color:${ab==null?"var(--ink3)":m.k==null?"var(--red)":"var(--green)"}">${ab==null?"—":m.k==null?"mark":"cut"}</td>`;
+    }).join("")}<td class="n">${m.k==null?"—":m.tmax+" mm"}</td><td class="n">${m.lpi}</td><td class="n">${m.air}</td></tr>`).join("")}</table>`;
+  $("#rules").innerHTML=RULES.map(([h,b])=>`<li><b style="color:#fff">${h}</b> ${b}</li>`).join("");
+}
+
+/* =======================================================================
+   WIRING
+   ======================================================================= */
+const TABS=["cook","book","test","pantry"];
+function go(t){
+  $$("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t?"true":"false"));
+  TABS.forEach(x=>$("#tab-"+x).classList.toggle("hidden",x!==t));
+  if(t==="test") buildCard();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function seg(sel,fn){ $$(sel+" button").forEach(b=>b.onclick=()=>{
+  $$(sel+" button").forEach(x=>x.setAttribute("aria-pressed","false"));
+  b.setAttribute("aria-pressed","true"); fn(b.dataset.v); }); }
+function modeUI(){
+  const cut=S.mode==="cut", m=matById(S.matId);
+  $("#wrapQual").classList.toggle("hidden",!cut);
+  $("#wrapTier").classList.toggle("hidden",cut);
+  $("#wrapT").classList.toggle("hidden",!cut&&m.k==null);
+}
+function syncMachine(){
+  $("#mWatts").value=S.machine.watts;
+  $("#mVmax").value=Math.round(outSpd(S.machine.vmax));
+  $("#mNote").textContent=`Nominal for this beam: ${PRESETS.find(p=>p.id===S.presetId)?.watts} W · sustained ceiling ${DUTY[S.machine.type]}% · slowest useful ${spd(VMIN[S.machine.type])}.`;
+}
+function readMachine(){
+  const watts=+$("#mWatts").value||S.machine.watts, vmax=inSpd(+$("#mVmax").value)||S.machine.vmax;
+  S.machine={...S.machine,watts,vmax};
+  const base=PRESETS.find(p=>p.id===S.presetId);
+  if(watts===base.watts && Math.abs(vmax-base.vmax)<1) delete S.drift[S.presetId];
+  else S.drift[S.presetId]={watts,vmax};
+  syncMachine(); save(); renderRecipe();
+}
+function fillMats(){
+  const g={}; M.forEach(m=>(g[m.cat]=g[m.cat]||[]).push(m));
+  const html=Object.keys(g).map(c=>`<optgroup label="${c}">${g[c].map(m=>`<option value="${m.id}">${m.name}</option>`).join("")}</optgroup>`).join("");
+  $("#mat").innerHTML=html; $("#rMat").innerHTML=html; $("#mat").value=S.matId; $("#rMat").value=S.matId;
+}
+function setUnit(u){
+  if(u===S.unit) return;
+  const f=(u==="mmmin"?60:1)/(S.unit==="mmmin"?60:1); S.unit=u;
+  const el=$("#rV"); if(el&&el.value!=="") el.value=+(parseFloat(el.value)*f).toFixed(u==="mmmin"?0:2);
+  $$(".uu").forEach(e=>e.textContent=uni().label);
+  save(); syncMachine(); renderRecipe(); renderBook(); buildCard();
+}
+function boot(){
+  $$("#segPreset button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.v===S.presetId?"true":"false"));
+  seg("#segPreset",v=>{
+    const base=PRESETS.find(x=>x.id===v), dr=S.drift[v];
+    S.presetId=v; S.machine=dr?{...base,...dr}:{...base};
+    syncMachine(); save(); renderRecipe();
+  });
+  ["#mWatts","#mVmax"].forEach(s=>$(s).oninput=readMachine);
+  $("#mat").onchange=e=>{ S.matId=e.target.value; const m=matById(S.matId);
+    if(m.k==null&&S.mode==="cut"){ S.mode="engrave";
+      $$("#segMode button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v==="engrave"?"true":"false")); }
+    modeUI(); renderRecipe(); };
+  $("#thick").oninput=renderRecipe;
+  seg("#segMode",v=>{S.mode=v;modeUI();renderRecipe();});
+  seg("#segQual",v=>{S.qual=v;renderRecipe();});
+  seg("#segTier",v=>{S.tier=v;renderRecipe();});
+  seg("#segUnit",setUnit);
+  seg("#segRMode",v=>{S.rMode=v;});
+  $$("nav button").forEach(b=>b.onclick=()=>go(b.dataset.tab));
+  $("#rSave").onclick=saveRecipe; $("#rReset").onclick=resetForm;
+  $("#rImg").onchange=async e=>{
+    const f=e.target.files[0]; if(!f) return;
+    try{ const d=await shrink(f);
+      if(editId){ const r=S.recipes.find(x=>x.id===editId);
+        if(r){ await putImg(r.id,d); r.hasImg=true; await saveBook(); editId=null; $("#rImg").value="";
+          renderBook(); msg("Photo added to that recipe."); return; } }
+      pendingImg=d;
+      $("#rPrev").innerHTML=`<img src="${d}" alt="Test burn preview" style="max-width:100%;border:1px solid var(--cob);border-radius:3px;margin-top:12px;box-shadow:0 0 22px rgba(255,180,90,.22)">`;
+      msg("Photo ready — it saves with the recipe.");
+    }catch(err){ msg(err.message,true); }
+  };
+  $("#rExport").onclick=async()=>{
+    const imgs={}; for(const r of S.recipes.filter(x=>x.hasImg)){ const d=await getImg(r.id); if(d) imgs[r.id]=d; }
+    dl(new Blob([JSON.stringify({recipes:S.recipes,images:imgs,tune:S.tune},null,2)],{type:"application/json"}),"laser-lab-recipe-book.json");
+  };
+  $("#rImport").onchange=e=>{ const f=e.target.files[0]; if(!f) return; const fr=new FileReader();
+    fr.onload=async()=>{ try{ const d=JSON.parse(fr.result);
+        const inc=(d.recipes||[]).filter(r=>!S.recipes.some(x=>x.id===r.id));
+        for(const r of inc){ if(d.images&&d.images[r.id]) await putImg(r.id,d.images[r.id]); }
+        S.recipes=[...inc,...S.recipes]; if(d.tune) S.tune={...S.tune,...d.tune};
+        await saveBook(); await save(); renderBook(); renderRecipe();
+        msg(`Imported ${inc.length} recipe${inc.length===1?"":"s"}.`);
+      }catch(err){ msg("That file didn't open as a recipe book.",true); } };
+    fr.readAsText(f); };
+  $("#tcDl").onclick=()=>{ if(!cardSVG) buildCard(); if(cardSVG) dl(new Blob([cardSVG],{type:"image/svg+xml"}),`test-bake-${S.matId}.svg`); };
+  $("#tcRebuild").onclick=buildCard;
+
+  $$("#segUnit button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===S.unit?"true":"false"));
+  $$(".uu").forEach(e=>e.textContent=uni().label);
+  fillMats(); syncMachine(); modeUI(); renderPantry(); renderBook(); renderRecipe();
+  $("#rV").value=Math.round(outSpd(8));
+}
+loadAll().then(boot);
+</script>
+</body>
+</html>
