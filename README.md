@@ -4,7 +4,8 @@ Starting-point power, speed and pass settings for the Makerspace Laser Lab (Room
 
 **Live app:** https://im4creative.github.io/MS-LL-Settings-Estimator/
 
-![Settings tab](docs/screenshots/settings.png)
+![Settings tab](docs/screenshots/settings.png)<img width="1316" height="2000" alt="settings" src="https://github.com/user-attachments/assets/4ca0a9c3-2b76-4e26-bfab-1fc032e35e40" />
+
 
 ## What it does
 
@@ -20,7 +21,8 @@ Pick a **laser type** (CO₂ or diode), a **beam**, a **material** and a **job**
 
 **Copy settings** puts the result on the clipboard, ready to paste on an offcut note.
 
-## Tabs
+## Tabs<img width="1316" height="2000" alt="settings" src="https://github.com/user-attachments/assets/658b82aa-87c6-4abe-a19d-5abeae362b62" />
+
 
 | Tab | Use it to |
 | --- | --- |
@@ -28,7 +30,8 @@ Pick a **laser type** (CO₂ or diode), a **beam**, a **material** and a **job**
 | **Test grid** | Build a 5 × 5 power-by-speed grid around your settings. Download it as SVG for LightBurn. |
 | **Materials** | See which materials each laser can cut or mark, what is banned, and the house rules. |
 
-![Test grid tab](docs/screenshots/test-grid.png)
+![Test grid tab](docs/screenshots/test-grid.png)<img width="1316" height="1409" alt="test-grid" src="https://github.com/user-attachments/assets/1a75f28d-c972-4fe2-a4da-5e00a999ddee" />
+
 
 ## How it decides
 
@@ -54,7 +57,8 @@ Under **Machine limits** you can set actual watts, top speed and the slowest cut
 
 25 materials across wood, plastic, natural, textile, paper, foam, metal and brittle. Metals and brittle materials (glass, slate, tile) are mark-only. The Cut through option greys out for them.
 
-![Materials tab](docs/screenshots/materials.png)
+![Materials tab](docs/screenshots/materials.png)<img width="1316" height="2625" alt="materials" src="https://github.com/user-attachments/assets/f3ad23e7-e949-4381-b69c-b6b75a7578f3" />
+
 
 ## Safety
 
